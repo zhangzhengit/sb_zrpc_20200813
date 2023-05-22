@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>zrpc-管理页面</title>
+</head>
+<body>
+	<h1>zrpc——欢迎访问</h1>
+	
+	
+	<#if serviceNameList?? && (serviceNameList?size > 0) >
+		<#list serviceNameList as sn>
+			<h3>${sn}</h3>
+		</#list>
+	<#else>
+		<h3>无服务</h3>
+	</#if>
+	
+</body>
+</html>

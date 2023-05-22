@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>zrpc-服务详情</title>
+</head>
+<body>
+	<h1>zrpc——欢迎访问</h1>
+	
+	<h1>服务:${serviceName}</h1>
+	<#if serviceDetail?? && (serviceDetail?size > 0) >
+		<#list serviceDetail.methodList as m>
+			<table border="1">
+				<tr>
+					<td>${m.name}</td>
+				</tr>
+			</table>
+		</#list>
+	</#if>
+	
+</body>
+</html>
