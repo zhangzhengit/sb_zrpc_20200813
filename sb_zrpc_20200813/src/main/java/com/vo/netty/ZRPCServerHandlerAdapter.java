@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.vo.client.balance.ZProcuderBalanceEnum;
 import com.vo.client.balance.ZRPCCTX;
 import com.vo.common.ZIDGenerator;
 import com.vo.common.ZRCRequestCache;
@@ -83,6 +84,20 @@ public class ZRPCServerHandlerAdapter extends ChannelInboundHandlerAdapter {
 
 			switch (e) {
 
+			case ROLLBACK:
+				this.log.info("处理ROLLBACK消息,zrpe={}", this.zrpe);
+				final ChannelHandlerContext consumerCTX_ROLLBACK = ZRCRequestCache.getCTX(this.zrpe.getId());
+				ZRPCServerHandlerAdapter.this.zrpcSender.send(this.zrpe, consumerCTX_ROLLBACK);
+				break;
+
+			case COMMIT:
+				this.log.info("处理COMMIT消息,zrpe={}", this.zrpe);
+//				final ZRPCCTX commitZRPCCTX = ZRPCServerHandlerAdapter.this.zrcctxc.getZRPCCTX(this.zrpe);
+				final ChannelHandlerContext consumerCTX_COMMIT = ZRCRequestCache.getCTX(this.zrpe.getId());
+				ZRPCServerHandlerAdapter.this.zrpcSender.send(this.zrpe, consumerCTX_COMMIT);
+
+				break;
+
 			case INVOEK:
 				this.log.info("处理INVOEK消息,zrpe={}", this.zrpe);
 				final ZRPCCTX producerZRPCCTX = ZRPCServerHandlerAdapter.this.zrcctxc.getZRPCCTX(this.zrpe);
@@ -92,6 +107,8 @@ public class ZRPCServerHandlerAdapter extends ChannelInboundHandlerAdapter {
 							this.zrpe.getServiceName(),	this.zrpe.getName(), this.zrpe);
 					final ZRPCProtocol result = new ZRPCProtocol();
 					result.setId(this.zrpe.getId());
+					result.setName(this.zrpe.getName());
+					result.setServiceName(this.zrpe.getServiceName());
 					result.setType(ZRPETEnum.PRODUCER_NOT_FOUND.getType());
 					ZRPCServerHandlerAdapter.this.zrpcSender.send(result, this.ctx);
 					return;
@@ -107,7 +124,7 @@ public class ZRPCServerHandlerAdapter extends ChannelInboundHandlerAdapter {
 				this.log.warn("处理INVOEK_EXCEPTION消息,id={},message={}", this.zrpe.getId(), this.zrpe.getRv());
 				final ChannelHandlerContext consumerCTX_E = ZRCRequestCache.getCTX(this.zrpe.getId());
 				ZRPCServerHandlerAdapter.this.zrpcSender.send(this.zrpe, consumerCTX_E);
-				return;
+				break;
 
 			case RESULT:
 
@@ -164,6 +181,8 @@ public class ZRPCServerHandlerAdapter extends ChannelInboundHandlerAdapter {
 				zrpe);
 		final ZRPCProtocol result = new ZRPCProtocol();
 		result.setId(zrpe.getId());
+		result.setName(zrpe.getName());
+		result.setServiceName(zrpe.getServiceName());
 		result.setType(ZRPETEnum.PRODUCER_NOT_FOUND.getType());
 		zrpcSender.send(result, zrpcctx.getCtx());
 		return null;

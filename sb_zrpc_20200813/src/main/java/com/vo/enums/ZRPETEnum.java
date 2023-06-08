@@ -32,6 +32,11 @@ public enum ZRPETEnum {
 	PRODUCER_NOT_FOUND(5, "PRODUCER_NOT_FOUND"),
 
 	PRODUCER_CTX_CLOSED(6, "PRODUCER_CTX_CLOSED"),
+
+	COMMIT(7, "COMMIT"),
+
+	ROLLBACK(8, "ROLLBACK"),
+
 	;
 
 	public static ZRPETEnum valueOfType(final Integer type) {
